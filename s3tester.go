@@ -32,7 +32,9 @@ import (
 	"github.com/aws/aws-sdk-go/aws/request"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
-	"github.com/codahale/hdrhistogram"
+
+	"github.com/HdrHistogram/hdrhistogram-go"
+
 	"golang.org/x/time/rate"
 )
 
@@ -249,7 +251,8 @@ func runtest(ctx context.Context, config *Config, args Parameters, sysInterruptH
 func startTestWorker(ctx context.Context, c chan<- Result, config *Config, args Parameters, sysInterruptHandler SyscallHandler) {
 	credential, err := loadCredentialProfile(args.Profile, args.NoSignRequest)
 	if err != nil {
-		log.Fatalf("Failed loading credentials.\nPlease specify env variable AWS_SHARED_CREDENTIALS_FILE if you put credential file other than AWS CLI configuration directory: %v", err)
+		log.Printf("Failed loading credentials.\nPlease specify env variable AWS_SHARED_CREDENTIALS_FILE if you put credential file other than AWS CLI configuration directory: %v", err)
+		credential = nil
 	}
 	limiter := rate.NewLimiter(args.ratePerSecond, 1)
 	workersPerEndpoint := args.Concurrency / len(args.endpoints)
@@ -336,6 +339,9 @@ func sendRequest(ctx context.Context, svc *s3.S3, httpClient *http.Client, opTyp
 	r.RecordLatency(elapsed)
 	if err != nil {
 		r.Failcount++
+		if svc.Config.Credentials == nil {
+			log.Fatalf("Failed %s on object bucket '%s/%s': %v", args.Operation, args.Bucket, keyName, err)
+		}
 		log.Printf("Failed %s on object bucket '%s/%s': %v", args.Operation, args.Bucket, keyName, err)
 	}
 	r.elapsedSum += elapsed
@@ -833,10 +839,7 @@ func handleTesterResults(config *Config, testResults []results) (int, error) {
 	}
 
 	// Collect printable results
-	printableResults := make([]results, 0)
-	for _, testResult := range testResults {
-		printableResults = append(printableResults, testResult)
-	}
+	printableResults := append([]results(nil), testResults...)
 
 	// Print the printable results
 	if config.JSON {

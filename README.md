@@ -1,4 +1,4 @@
-# s3tester - S3 Performance Benchmarking 
+# s3tester - S3 Performance Benchmarking
 
 The goal of s3tester is to be a lightweight S3 performance testing utility. It is solely focused on S3 testing.
 
@@ -6,19 +6,19 @@ This tool is in active development - please submit feature requests in the issue
 
 ## s3tester latest version
 
-- [2.1.0](https://github.com/s3tester/s3tester/releases/tag/2.1.0)
+- [v3.0.1](https://github.com/s3tester/s3tester/releases/tag/v3.0.1)
 
 ## Minimum Requirements
-	
+
 - Go 1.7 or higher
 
 ## Installation
 
+```bash
+go get github.com/amilevskiy/s3tester
 ```
-$ go get github.com/s3tester/s3tester
-```
-	
-If you don't want to build from source you can download the compiled version of s3tester for Windows or Linux from [github.com/s3tester/s3tester/releases](https://www.github.com/s3tester/s3tester/releases)
+
+If you don't want to build from source you can download the compiled version of s3tester for Windows or Linux from [github.com/amilevskiy/s3tester/releases](https://www.github.com/amilevskiy/s3tester/releases)
 
 ## Usage
 
@@ -28,9 +28,9 @@ There are multiple options for setting credentials.
 
 - Using environment Variables:
 
-```
-$ export AWS_ACCESS_KEY_ID=AKIAINZFCN46TISVUUCA
-$ export AWS_SECRET_ACCESS_KEY=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
+```bash
+export AWS_ACCESS_KEY_ID=AKIAINZFCN46TISVUUCA
+export AWS_SECRET_ACCESS_KEY=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
 ```
 
 - Using AWS credential file: see the `--profile` option below for details.
@@ -42,7 +42,7 @@ $ export AWS_SECRET_ACCESS_KEY=VInXxOfGtEIwVck4AdtUDavmJf/qt3jaJEAvSKZO
 | addressing-style | string | Whether to use virtual-hosted style addresses (bucket name is in the hostname) or path-style addresses (bucket name is part of the path). Value must be one of `virtual` or `path`. Default: `path` |
 | bucket | string | Bucket name (mandatory). Default: `test` |
 | concurrency | int | Maximum concurrent requests. `0`: scan concurrency, run with `ulimit -n 16384`. Default: `1` |
-| consistency | string | The StorageGRID consistency control to use for all requests. Does nothing against non StorageGRID systems. (`all`, `available`, `strong-global`, `strong-site`, `read-after-new-write`, `weak`) | 
+| consistency | string | The StorageGRID consistency control to use for all requests. Does nothing against non StorageGRID systems. (`all`, `available`, `strong-global`, `strong-site`, `read-after-new-write`, `weak`) |
 | cpuprofile | string | Write CPU profile to file |
 | days | int | The number of days that the restored object will be available for. Default: `1` |
 | debug | boolean | Print response body on request failure. |
@@ -53,26 +53,26 @@ $ export AWS_SECRET_ACCESS_KEY=VInXxOfGtEIwVck4AdtUDavmJf/qt3jaJEAvSKZO
 | json | boolean | The result will be printed out in JSON format if this flag exists. Default: `false` |
 | lockstep | boolean | Force all threads to advance at the same rate rather than run independently |
 | logdetail | string | Write detailed log to file |
-| loglatency | string | Write latency histogram to file | 
+| loglatency | string | Write latency histogram to file |
 | metadata  | string | The metadata to use for the objects. The string must be formatted as such: `'key1=value1&key2=value2'`. Used for `put`, `updatemeta`, `multipartput`, `putget` and `putget9010r` |
 | metadata-directive | string | Specifies whether the metadata is copied from the source object or if it is replaced with the metadata provided in the object copy request. Value must be one of `COPY` or `REPLACE`. Default: `COPY` |
 | mixed-workload | string | Path to a JSON file that specifies a mixture of operations. |
 | no-sign-request | boolean | Do not sign requests. Credentials will not be loaded if this argument is provided |
 | operation | string | Operation type: `put`, `multipartput`, `get`, `puttagging`, `updatemeta`, `randget`, `delete`, `options`, `head`, `restore`. Default: `put`
-| overwrite | int | Turns a PUT/GET/HEAD into an operation on the same S3 key. `1`: all writes/reads are to same object, `2`: threads clobber each other but each write/read is to unique objects | 
+| overwrite | int | Turns a PUT/GET/HEAD into an operation on the same S3 key. `1`: all writes/reads are to same object, `2`: threads clobber each other but each write/read is to unique objects |
 | partsize | int | Size of each part in bytes. Only has an effect when a multipart put is used. Min: `5242880` (5MiB). Default: `5242880` (5MiB)|
 | prefix | string | Object name prefix. Default: `testobject` |
 | profile | string | Use a specific profile from [AWS CLI credential file](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html) |
 | query-params | string | Specify one or more custom query parameters of the form `<queryparam-name>=<queryparam-value>` or `<queryparam-name>` separated by ampersands. |
 | random-range | string | Used to perform random range GET requests. Format is `<min>-<max>/<size>`, where `<size>` is the number of bytes per GET request, and `<min>-<max>` is an inclusive byte range within the object . Ex: Use 0-399/100 to perform random 100-byte reads within the first 400 bytes of an object. |
 | range | string | Specify range header for GET requests |
-| ratelimit | float | The total number of operations per second across all threads. Default: `1.7976931348623157e+308` | 
+| ratelimit | float | The total number of operations per second across all threads. Default: `1.7976931348623157e+308` |
 | region | string | Region to send requests to. Default: `us-east-1` |
 | repeat | int | Repeat each S3 operation this many times: Default: `0` (do not repeat) |
 | requests | int | Total number of requests. Mutually exclusive with `duration`. Default: `1000` |
 | retries | int | Number of retry attempts. Default: `0` |
 | retrysleep | int | How long to sleep in between each retry in milliseconds. Default: `0` (exponential backoff) |
-| rr | - | Reduced redundancy storage for PUT requests | 
+| rr | - | Reduced redundancy storage for PUT requests |
 | size | int | Object size in bytes. Default: `30720` |
 | tagging | string | The tag-set for the object. The tag-set must be formatted as such: `'tag1=value1&tag2=value2'`. Used for `put`, `puttagging`, `putget` and `putget9010r` |
 | tagging-directive | string | Specifies whether the object tag-set is copied from the source object or if it is replaced with the tag-set provided in the object copy request. Value must be one of 'COPY' or 'REPLACE'. Default: `COPY` |
@@ -82,6 +82,7 @@ $ export AWS_SECRET_ACCESS_KEY=VInXxOfGtEIwVck4AdtUDavmJf/qt3jaJEAvSKZO
 | workload | string | File path to a JSON file that describes a workload to be run. The file is parsed with the Go template package and must produce JSON that is valid according to the workload schema |
 
 #### workload JSON Sample File
+
 ```raw
 {
   "global": {
@@ -117,26 +118,27 @@ $ export AWS_SECRET_ACCESS_KEY=VInXxOfGtEIwVck4AdtUDavmJf/qt3jaJEAvSKZO
     }
   ]
 }
-```
+
+```raw
 **NOTE:** [File Sample](example/workload.json) and [Template Support](example/templated-workload.json)
 
 #### mixedWorkload JSON Sample File
 
 ```raw
 {
-	"mixedWorkload": [{
-		"operationType": "put",
-		"ratio": 25
-	}, {
-		"operationType": "get",
-		"ratio": 25
-	}, {
-		"operationType": "updatemeta",
-		"ratio": 25
-	}, {
-		"operationType": "delete",
-		"ratio": 25
-	}]
+  "mixedWorkload": [{
+    "operationType": "put",
+    "ratio": 25
+  }, {
+    "operationType": "get",
+    "ratio": 25
+  }, {
+    "operationType": "updatemeta",
+    "ratio": 25
+  }, {
+    "operationType": "delete",
+    "ratio": 25
+  }]
 }
 ```
 

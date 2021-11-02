@@ -39,8 +39,6 @@ import (
 )
 
 const (
-	// VERSION is displayed with help, bump when updating
-	VERSION = "3.0.0"
 	// for identifying s3tester requests in the user-agent header
 	userAgentString = "s3tester/"
 
@@ -48,6 +46,9 @@ const (
 	overwriteSameKey        = 1
 	overwriteClobberThreads = 2
 )
+
+// version is displayed with help, bump when updating
+var version string = "development"
 
 var (
 	// Preserves quoted whitespace but does not support complex shell escapes
